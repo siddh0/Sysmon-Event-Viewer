@@ -33,11 +33,9 @@ const LogViewer = ({ logContent }) => {
       title: 'EventID',
       dataIndex: 'EventID',
       key: 'EventID',
-      render: (text, record) => (
-        <div className="cursor-pointer text-green-500" onClick={() => handleToggle(record.key)}>
-          {text}
-        </div>
-      ),
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.EventID - b.EventID,
+     
     },
     {
       title: 'TimeCreated',
@@ -48,6 +46,7 @@ const LogViewer = ({ logContent }) => {
       title: 'Image',
       dataIndex: 'Image',
       key: 'Image',
+      
     },
   ];
 
@@ -81,6 +80,9 @@ const LogViewer = ({ logContent }) => {
         dataSource={dataSource}
         expandedRowRender={(record) => record.expandedDetails}
         expandRowByClick
+        showSorterTooltip={{
+          target: 'sorter-icon',
+        }}
       />
 
     </div>
