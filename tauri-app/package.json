@@ -24,6 +24,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^18.2.0",
     "react-drag-drop-files": "^2.3.10",
+    "react-highlight-words": "^0.20.0",
     "react-icons": "^5.2.1",
     "react-table": "^7.8.0",
     "xml-js": "^1.6.11",
