@@ -22,16 +22,16 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex">
-      <div className={`bg-gray-800 text-white transition-all duration-300 ${isSidebarVisible ? 'w-64 p-4' : 'w-12 p-2'}`}>
+    <div className="flex h-screen">
+      <div className={`bg-gray-800 text-white transition-all duration-300 ${isSidebarVisible ? 'w-64 p-4' : 'w-12 p-2'} flex flex-col`}>
         <div className="flex justify-between items-center mb-4">
-          <h2 className={`text-xl font-bold ${isSidebarVisible ? '' : 'hidden'}`}>Sysmon Event Codes</h2>
-          <button onClick={handleToggleSidebar} className="focus:outline-none">
+          {isSidebarVisible && <h2 className="text-xl font-bold">Sysmon Event Codes</h2>}
+          <button onClick={handleToggleSidebar} className="focus:outline-none mt-2">
             {isSidebarVisible ? <FaTimes /> : <FaBars />}
           </button>
         </div>
         {isSidebarVisible && (
-          <ul className="overflow-y-auto h-full">
+          <ul className="overflow-y-auto flex-grow">
             {eventCodes.map((event) => (
               <li key={event.code} className="mb-2">
                 <div

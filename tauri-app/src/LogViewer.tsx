@@ -27,6 +27,19 @@ const LogViewer = ({ logContent }) => {
   if (!logContent) {
     return <div className="text-center text-gray-500">No content to display</div>;
   }
+  const formatISODate = (isoString) => {
+    const date = new Date(isoString);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    };
+    return date.toLocaleString('en-US', options);
+  };
 
   const columns = [
     {
@@ -53,7 +66,7 @@ const LogViewer = ({ logContent }) => {
   const dataSource = logContent.Events.Event.map((event, index) => ({
     key: index,
     EventID: event.System.EventID._text,
-    TimeCreated: event.System.TimeCreated._attributes.SystemTime,
+    TimeCreated: formatISODate(event.System.TimeCreated._attributes.SystemTime),
     Image: event.EventData.Data.find((d) => d._attributes.Name === 'Image')?._text || 'N/A',
     expandedDetails: (
       <div>
