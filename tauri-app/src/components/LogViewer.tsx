@@ -207,7 +207,7 @@ const LogViewer = ({ logContent }) => {
             pageSize: 100,
           }}
           scroll={{
-            y: 720,
+            y: 600,
           }}
         />
       </div>

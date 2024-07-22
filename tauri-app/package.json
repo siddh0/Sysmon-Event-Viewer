@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.11.5",
     "@tauri-apps/api": "^1",
     "antd": "^5.19.1",
+    "axios": "^1.7.2",
     "cors": "^2.8.5",
     "dark-mode-toggle": "^0.15.0",
     "evtx": "^0.3.3",
@@ -26,6 +27,7 @@
     "react-drag-drop-files": "^2.3.10",
     "react-highlight-words": "^0.20.0",
     "react-icons": "^5.2.1",
+    "react-router-dom": "^6.24.1",
     "react-table": "^7.8.0",
     "xml-js": "^1.6.11",
     "xml2js": "^0.6.2"

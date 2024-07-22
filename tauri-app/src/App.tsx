@@ -1,7 +1,31 @@
-import React, { useState } from "react";
+// src/App.jsx
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import LogViewer from './components/LogViewer';
+import Sidebar from './components/Sidebar';
+import CybersecurityNews from './components/CybersecurityNews';
 import { FileUploader } from "react-drag-drop-files";
-import LogViewer from "./LogViewer";
-import Sidebar from "./Sidebar";  // Adjust the import path as needed
+
+function Home({ handleChange, fileTypes, logContent, error }) {
+  return (
+    <div className="bg-gray-900 text-white min-h-screen flex">
+      <Sidebar />
+      <div className="flex-grow container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-2 flex items-center justify-between">
+          Log File Viewer
+          <Link to="/news">
+            <button className="bg-blue-500 text-white p-2 rounded text-sm">Cybersecurity News</button>
+          </Link>
+        </h1>
+        <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+        {error && <p className="text-red-600 my-2">{error}</p>}
+        <div className="log-content mt-4">
+          <LogViewer logContent={logContent} />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [logContent, setLogContent] = useState(null);
@@ -9,20 +33,17 @@ function App() {
   const fileTypes = ["JPG", "PNG", "EVTX", "TXT", "XML"];
   const [file, setFile] = useState(null);
 
-  // Function to handle file upload and read content
   const handleFileUpload = async (file) => {
     if (file) {
       if (file.type === "text/plain" || file.name.endsWith(".txt")) {
-        // Handle text file directly in the browser
         try {
           const text = await file.text();
           setLogContent({ content: text });
-          setError(null); // Clear any previous errors
+          setError(null);
         } catch (err) {
           setError("Error reading file: " + err.message);
         }
       } else if (file.name.endsWith(".xml")) {
-        // Handle XML file by uploading it to the backend
         const formData = new FormData();
         formData.append("file", file);
 
@@ -41,10 +62,9 @@ function App() {
             throw new Error(result.error);
           }
 
-          // Assuming result.content is a valid JSON string
           const jsonobj = JSON.parse(result.content);
-          setLogContent(jsonobj); // Set parsed JSON content, starting from Events
-          setError(null); // Clear any previous errors
+          setLogContent(jsonobj);
+          setError(null);
         } catch (err) {
           setError("Error processing file: " + err.message);
         }
@@ -56,24 +76,28 @@ function App() {
     }
   };
 
-  // Function to handle file change
   const handleChange = (file) => {
     setFile(file);
     handleFileUpload(file);
   };
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen flex">
-      <Sidebar />
-      <div className="flex-grow container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">Log File Viewer</h1>
-        <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
-        {error && <p className="text-red-600 my-2">{error}</p>}
-        <div className="log-content mt-4">
-          <LogViewer logContent={logContent} />
-        </div>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              handleChange={handleChange}
+              fileTypes={fileTypes}
+              logContent={logContent}
+              error={error}
+            />
+          }
+        />
+        <Route path="/news" element={<CybersecurityNews />} />
+      </Routes>
+    </Router>
   );
 }
 
