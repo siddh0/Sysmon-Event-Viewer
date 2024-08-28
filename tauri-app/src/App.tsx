@@ -5,6 +5,7 @@ import LogViewer from './components/LogViewer';
 import Sidebar from './components/Sidebar';
 import CybersecurityNews from './components/CybersecurityNews';
 import { FileUploader } from "react-drag-drop-files";
+import { invoke } from '@tauri-apps/api/tauri';
 
 function Home({ handleChange, fileTypes, logContent, error }) {
   return (
@@ -35,47 +36,25 @@ function App() {
 
   const handleFileUpload = async (file) => {
     if (file) {
-      if (file.type === "text/plain" || file.name.endsWith(".txt")) {
-        try {
-          const text = await file.text();
-          setLogContent({ content: text });
-          setError(null);
-        } catch (err) {
-          setError("Error reading file: " + err.message);
-        }
-      } else if (file.name.endsWith(".xml")) {
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-          const response = await fetch("http://localhost:5000/upload", {
-            method: "POST",
-            body: formData,
-          });
-
-          if (!response.ok) {
-            throw new Error("Error uploading file");
-          }
-
-          const result = await response.json();
-          if (result.error) {
-            throw new Error(result.error);
-          }
-
-          const jsonobj = JSON.parse(result.content);
-          setLogContent(jsonobj);
-          setError(null);
-        } catch (err) {
-          setError("Error processing file: " + err.message);
-        }
-      } else {
-        setError("Unsupported file type");
+      try {
+        const text = await file.text();
+        console.log("File content read successfully");
+        
+        const jsonContent = await invoke("upload_file_and_convert", { fileContent: text });
+        console.log("JSON content received:", jsonContent);
+        
+        const parsedJson = JSON.parse(jsonContent);
+        console.log(parsedJson)
+        setLogContent(parsedJson);
+        setError(null);
+      } catch (err) {
+        console.error("Error processing file:", err);
+        setError("Error processing file: " + err.message);
       }
     } else {
       console.log("No file to read.");
     }
   };
-
   const handleChange = (file) => {
     setFile(file);
     handleFileUpload(file);

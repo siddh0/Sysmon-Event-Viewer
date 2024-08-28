@@ -9,7 +9,7 @@ const EventData = ({ data }) => (
     <ul className="list-disc ml-5">
       {data.map((item, index) => (
         <li key={index} className="my-1">
-          <strong>{item._attributes.Name}:</strong> {item._text}
+          <strong>{item.$.Name}:</strong> {item._}
         </li>
       ))}
     </ul>
@@ -159,7 +159,6 @@ const LogViewer = ({ logContent }) => {
       dataIndex: 'EventID',
       key: 'EventID',
       defaultSortOrder: 'descend',
-      
       sorter: (a, b) => a.EventID - b.EventID,
     },
     {
@@ -177,17 +176,17 @@ const LogViewer = ({ logContent }) => {
 
   const dataSource = logContent.Events.Event.map((event, index) => ({
     key: index,
-    EventID: event.System.EventID._text,
-    TimeCreated: formatISODate(event.System.TimeCreated._attributes.SystemTime),
-    Image: event.EventData.Data.find((d) => d._attributes.Name === 'Image')?._text || 'N/A',
+    EventID: event.System[0].EventID[0],
+    TimeCreated: formatISODate(event.System[0].TimeCreated[0].$.SystemTime),
+    Image: event.EventData[0].Data.find((d) => d.$.Name === 'Image')?._ || 'N/A',
     expandedDetails: (
       <div>
-        <div><strong>Level:</strong> {event.System.Level._text}</div>
-        <div><strong>Task:</strong> {event.System.Task._text}</div>
-        <div><strong>Opcode:</strong> {event.System.Opcode._text}</div>
-        <div><strong>Channel:</strong> {event.System.Channel._text}</div>
-        <div><strong>Computer:</strong> {event.System.Computer._text}</div>
-        <EventData data={event.EventData.Data} />
+        <div><strong>Level:</strong> {event.System[0].Level[0]}</div>
+        <div><strong>Task:</strong> {event.System[0].Task[0]}</div>
+        <div><strong>Opcode:</strong> {event.System[0].Opcode[0]}</div>
+        <div><strong>Channel:</strong> {event.System[0].Channel[0]}</div>
+        <div><strong>Computer:</strong> {event.System[0].Computer[0]}</div>
+        <EventData data={event.EventData[0].Data} />
       </div>
     ),
   }));
